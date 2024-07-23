@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+
+    <title>Ejemplo sencillo de React</title>
+    
+    <script
+      src="https://unpkg.com/react@16/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  </head>
+  
+  <body>
+    <script type="text/babel">
+      const $app = document.querySelector("body");
+      const useState = React.useState;
+
+      const Avatar = ({ id, name = "👦", size }) => {
+        const [enabled, setEnabled] = useState(true);
+        const src = `https://randomuser.me/api/portraits/men/${id}.jpg`;
+
+        let pictureClassName = "";
+        if (size === "small") {
+          pictureClassName = "is-small";
+        } else if (size === "large") {
+          pictureClassName = "is-large";
+        }
+
+        const imgClassName = enabled ? "" : "disabled";
+
+        return (
+          <picture className={pictureClassName}>
+            {id ? (
+              <img
+                onClick={() => {
+                  setEnabled(!enabled);
+                }}
+                className={imgClassName}
+                src={src}
+              />
+            ) : (
+              <i>Sin imagen</i>
+            )}
+            <strong>{enabled ? name : "Desactivada"}</strong>
+          </picture>
+        );
+      };
+
+      const Separator = ({ jumps }) => {
+            return <div class="Separator">
+                <br /> <hr />
+                </div>
+      }
+
+      function Contador() {
+        const [contadorValue, actualizarContador] = useState(33);
+        const [numeroDeVeces, actualizarVeces] = useState(0);
+
+        return (
+          <div>
+            <span>{contadorValue}</span>
+            <button
+              onClick={() => {
+                actualizarContador(contadorValue + 1);
+                actualizarVeces(numeroDeVeces + 1);
+              }}
+            >
+              Incrementar +
+            </button>
+            <button
+              onClick={() => {
+                actualizarContador(contadorValue - 1);
+                actualizarVeces(numeroDeVeces + 1);
+              }}
+            >
+              Decrementar -{" "}
+            </button>
+            <p>Veces utilizado {numeroDeVeces}</p>
+          </div>
+        );
+      }
+
+      const Main = ( {title, sections } ) => {
+
+          return <main>
+
+                  <h1> {title} </h1>
+
+                  {sections.map( (s, index) => (
+                      <section id={"section " + (index+1)}>
+
+                          <Separator />
+
+                          <h2>{s.title}</h2>
+
+                          {s.content}
+                      </section>
+                  ) )}
+
+            </main>
+
+      }
+
+      /**
+      ReactDOM.render(
+        <div>
+          <h1>Ejemplo sencillo con React</h1>
+
+          <Separator />
+          
+          <h2>Ejemplo de avatares</h2>
+          <Avatar id="2" size="small" name="Hombre 2" />
+          <Avatar id="3" name="Hombre 3" />
+          <Avatar id="1" size="large" name="Hombre 1" />
+
+          <Separator />
+
+          <h2>Ejemplo del contador</h2>
+          <Contador />
+        </div>,
+        $app
+      );
+
+      */
+      
+      ReactDOM.render(
+        <Main title="Ejemplo sencillo con React" sections = {[
+            {
+                title: "Ejemplo de avatares",
+                content: <div class="avatares" >
+                            <Avatar id="2" size="small" name="Hombre 2" />
+                            <Avatar id="3" name="Hombre 3" />
+                            <Avatar id="1" size="large" name="Hombre 1" />
+                        </div>
+            }, 
+            {
+                title: "Ejemplo de contador",
+                content: <Contador />
+            }
+        ]} />,
+        $app
+      );
+      
+    </script>
+  </body>
+
+</html>
