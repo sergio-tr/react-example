@@ -1,60 +1,32 @@
 import { useState } from 'react'
+
 import Square from './Square'
 import WinnerModal from './WinnerModal'
 
-export default function Board({ dimension }) {
+import { getConsts } from '../scripts/constants'
+import { saveGame, restartGame, getItem } from '../scripts/localStorage'
+import { checkWinner, isGameOver} from '../scripts/logic'
 
-    const CONSTS = {
-        INITIAL_BOARD : Array(dimension*dimension).fill(null),
-        X: 'X',
-        O: 'O',
-    }
+import confetti from 'canvas-confetti'
 
-    const [board, setBoard] = useState(CONSTS.INITIAL_BOARD)
-    const [turn, setTurn] = useState(CONSTS.X)
+export default function Board() {
+
+    const dimension = getItem('dimension')
+
+    const CONSTS = getConsts(dimension)
+
+    const [board, setBoard] = useState(() => {
+        const storedBoard = getItem('board')
+        return storedBoard ? JSON.parse(storedBoard) : CONSTS.INITIAL_BOARD
+    })
+    const [turn, setTurn] = useState(() => {
+        const storedTurn = getItem('turn')
+        return storedTurn ? storedTurn : CONSTS.X
+    })
     const [isThereWinner, setIsThereWinner] = useState(false)
     const [winner, setWinner] = useState(null)
 
-    const getRowElements = (board, row) => {
-        const startIndex = row * dimension
-        return board.slice(startIndex, startIndex + dimension)
-    }
-
-    const checkWinner = (board) => {
-
-        const allEqual = (arr) => arr.every(v => v !== null && v === arr[0])
-
-        for (let row = 0; row < dimension; row++) {
-            const rowElements = getRowElements(board, row)
-            if (allEqual(rowElements)) return rowElements[0]
-        }
-        for (let col = 0; col < dimension; col++) {
-            const colElements = []
-            for (let row = 0; row < dimension; row++) {
-                const rowElements = getRowElements(board, row)
-                colElements.push(rowElements[col])
-            }
-            if (allEqual(colElements)) return colElements[0]
-        }
-
-        const mainDiagonal = []
-        for (let i = 0; i < dimension; i++) {
-            mainDiagonal.push(board[i * dimension + i])
-        }
-        if (allEqual(mainDiagonal)) return mainDiagonal[0]
-
-        const secondaryDiagonal = []
-        for (let i = 0; i < dimension; i++) {
-            secondaryDiagonal.push(board[i * dimension + (dimension - i - 1)])
-        }
-        if (allEqual(secondaryDiagonal)) return secondaryDiagonal[0]
-
-        return null;
-
-    }
-
-    const isGameOver = (board) => board.every((square) => square !== null)
-
+    
     const handleClick = (index) => {
         
         // PRE-CHECKS
@@ -69,23 +41,34 @@ export default function Board({ dimension }) {
 
         setBoard(newBoard)
 
+        // STATE SAVING
+        saveGame(newBoard, newTurn)
+
         // POST-CHECKS
-        const winner = checkWinner(newBoard)
+        const winner = checkWinner(newBoard, dimension)
         if (winner) {
             setWinner(winner)
             setIsThereWinner(true)
+            confetti()
         } else if (isGameOver(newBoard)) {
             setIsThereWinner(true)
         }
     }
 
     const resetGame = () => {
+        restartGame()
         setBoard(CONSTS.INITIAL_BOARD)
         setTurn(CONSTS.X)
         setWinner(null)
         setIsThereWinner(false)
     }
 
+    const newDimension = () => {
+        restartGame(true)
+        location.reload()
+    }
+
+    console.log(dimension)
     const gameStyle = { 
         display: 'grid', 
         gridTemplateColumns: `repeat(${dimension}, 1fr)`, 
@@ -94,6 +77,10 @@ export default function Board({ dimension }) {
 
     return (
         <>
+            <div>
+                <button onClick={newDimension}>Select new dimension</button>
+                <button onClick={resetGame}>Restart game</button>
+            </div>
             <section className='game' style={gameStyle} >
                 {
                     board.map((_, index) => 

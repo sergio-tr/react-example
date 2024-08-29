@@ -84,6 +84,7 @@ input input:focus {
   transition: 0.2s;
   font-weight: bold;
   cursor: pointer;
+  align-self: center;
 }
 
 .board button:hover {

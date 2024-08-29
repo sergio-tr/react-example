@@ -1,10 +1,10 @@
-export default function Initializer({ setIsInitialized, setDimension }) {
-
-    console.log("[Init] rendered")
+export default function Initializer({ setIsInitialized }) {
 
     const handleClick = () => {
         setIsInitialized(true)
-        setDimension(Number(document.getElementById('dimension').value))
+
+        const dimension = Number(document.getElementById('dimension').value)
+        window.localStorage.setItem('dimension', dimension)
     }
 
     return (
