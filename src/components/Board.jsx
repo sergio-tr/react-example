@@ -106,6 +106,10 @@ export default function Board({ dimension }) {
             </section>
 
             <section className='turn'>
+
+                <div className='info'>
+                    <h2>Next turn:</h2>
+                </div>
                 <Square isSelected={turn === CONSTS.X}>
                     {CONSTS.X}
                 </Square>
