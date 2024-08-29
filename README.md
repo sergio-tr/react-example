@@ -15,16 +15,16 @@ A simple Tic-Tac-Toe game built with React.
    git clone https://github.com/sergio-tr/react-example.git
    ```
 
-2. Navigate to the project directory:
+2. **Navigate to the project directory**:
     ```bash
     cd react-example/tic-tac-toe
     ```
-3. Install dependencies:
+3. **Install dependencies**:
     ```bash
     npm install
     ```
-4. Start developing environment:
+4. **Start developing environment**:
     ```bash
     npm run dev
     ```
-5. Open your browser and go to http://localhost:5173 to play.
+5. **Open your browser and go to http://localhost:5173 to play.**
