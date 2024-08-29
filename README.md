@@ -23,7 +23,7 @@ A simple Tic-Tac-Toe game built with React.
     ```bash
     npm install
     ```
-4. **Start developing environment**:
+4. **Start development environment**:
     ```bash
     npm run dev
     ```
